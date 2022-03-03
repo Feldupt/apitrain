@@ -1,29 +1,30 @@
 package fr.url.miage.apitrain.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import javax.persistence.ElementCollection;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 
-@Entity
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Train {
+public class trainInput {
 
-    @Id
+    @NotNull
     private String id;
+    @NotNull
     private String name;
+    @NotNull
     @ElementCollection
     private List<String> felzer;
+    @NotNull
     private int numberOfPlaceFirstClass;
+    @NotNull
     private int numberOfPlaceSecondClass;
+    @NotNull
     private boolean isBar;
-
-
 }

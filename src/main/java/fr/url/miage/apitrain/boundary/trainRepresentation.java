@@ -1,16 +1,22 @@
 package fr.url.miage.apitrain.boundary;
 
 import fr.url.miage.apitrain.control.trainAssembler;
+import fr.url.miage.apitrain.entities.Train;
+import fr.url.miage.apitrain.entities.trainInput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Controller
 @ResponseBody
@@ -38,5 +44,22 @@ public class trainRepresentation{
                 .filter(Optional::isPresent)
                 .map(i -> ResponseEntity.ok(ta.toModel(i.get())))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    @Transactional
+    public ResponseEntity<?> saveTrain(@RequestBody @Valid trainInput train){
+        Train trainToSave = new Train(
+                UUID.randomUUID().toString(),
+                train.getName(),
+                train.getFelzer(),
+                train.getNumberOfPlaceFirstClass(),
+                train.getNumberOfPlaceSecondClass(),
+                train.isBar()
+        );
+
+        Train trainSaved = tr.save(trainToSave);
+        URI location = linkTo(trainRepresentation.class).slash(trainSaved.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 }
