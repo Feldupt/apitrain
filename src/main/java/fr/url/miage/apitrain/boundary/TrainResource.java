@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public interface trainResource extends JpaRepository<Train, String> {
+public interface TrainResource extends JpaRepository<Train, String> {
 
     Optional<Train> findByStartCityAndJourneyIn(String startCity, Set<String> journey);
 

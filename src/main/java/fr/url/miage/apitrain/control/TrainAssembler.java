@@ -1,6 +1,7 @@
 package fr.url.miage.apitrain.control;
 
-import fr.url.miage.apitrain.boundary.trainRepresentation;
+import fr.url.miage.apitrain.boundary.PlaceRepresentation;
+import fr.url.miage.apitrain.boundary.TrainRepresentation;
 import fr.url.miage.apitrain.entities.Train;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -14,13 +15,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
-public class cityAssembler implements RepresentationModelAssembler<Train,EntityModel<Train>> {
+public class TrainAssembler implements RepresentationModelAssembler<Train,EntityModel<Train>> {
 
     @Override
     public EntityModel<Train> toModel(Train train) {
+        String trainId = train.getId();
         return EntityModel.of(train,
-                linkTo(methodOn(trainRepresentation.class)
-                        .getAllTrain()).withRel("collection"));
+                linkTo(methodOn(TrainRepresentation.class)
+                        .getAllTrain()).withRel("collection"),
+                linkTo(methodOn(PlaceRepresentation.class)
+                        .getAllPlaceByTrain(trainId)).withRel("places"));
     }
 
     @Override
@@ -30,7 +34,7 @@ public class cityAssembler implements RepresentationModelAssembler<Train,EntityM
                 .map(this::toModel)
                 .toList();
         return CollectionModel.of(trainModel,
-                linkTo(methodOn(trainRepresentation.class)
+                linkTo(methodOn(TrainRepresentation.class)
                         .getAllTrain()).withSelfRel());
     }
 }

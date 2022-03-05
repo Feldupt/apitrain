@@ -1,8 +1,8 @@
 package fr.url.miage.apitrain.boundary;
 
-import fr.url.miage.apitrain.control.trainAssembler;
+import fr.url.miage.apitrain.control.TrainAssembler;
 import fr.url.miage.apitrain.entities.Train;
-import fr.url.miage.apitrain.entities.trainInput;
+import fr.url.miage.apitrain.entities.TrainInput;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +22,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Controller
 @ResponseBody
 @RequestMapping(value = "/train", produces = MediaType.APPLICATION_JSON_VALUE)
-public class trainRepresentation{
+public class TrainRepresentation {
 
-    private final trainResource tr;
-    private final trainAssembler ta;
+    private final TrainResource tr;
+    private final TrainAssembler ta;
 
     // grâce au constructeur, Spring injecte une instance de ir
-    public trainRepresentation(trainResource tr, trainAssembler ta) {
+    public TrainRepresentation(TrainResource tr, TrainAssembler ta) {
         this.tr = tr;
         this.ta = ta;
     }
@@ -58,6 +58,7 @@ public class trainRepresentation{
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    //Aller simple
     @GetMapping(value="/{city1}/{city2}/aller/{day}/{time}")
     public ResponseEntity<List<?>> getTrainBySimpleByDay(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String day, @PathVariable("time") String time)
     {
@@ -78,9 +79,9 @@ public class trainRepresentation{
         return ResponseEntity.ok(taList);
 
     }
-
-    @GetMapping(value="/{city1}/{city2}/aller/{day}/{time}/couloir")
-    public ResponseEntity<?> getTrainBySimpleByDayByPosition(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String day, @PathVariable("time") String time)
+    //Aller simple + position
+    @GetMapping(value="/{city1}/{city2}/aller/{day}/{time}/{position}")
+    public ResponseEntity<List<?>> getTrainBySimpleByDay(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("position") String position)
     {
         String[] tmpDate = day.split("-");
         LocalDate date2 = LocalDate.from(LocalDate.of(Integer.parseInt(tmpDate[2]), Integer.parseInt(tmpDate[1]), Integer.parseInt(tmpDate[0])));
@@ -90,9 +91,18 @@ public class trainRepresentation{
         //yyyy-MM-dd
         Set<String> journey = new HashSet<>();
         journey.add(city2);
-        return ResponseEntity.ok().build();
+
+        List<Train> list = tr.findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(city1, journey, newDate);
+        ArrayList<EntityModel<Train>> taList = new ArrayList<>();
+        list.forEach((t->{
+            taList.add(ta.toModel(t));
+        }));
+        return ResponseEntity.ok(taList);
+
     }
 
+
+    //Aller retour
     @GetMapping(value="/{city1}/{city2}/aller-retour/{day}/{time}/{dayBack}/{timeBack}")
     public ResponseEntity<List<?>> getTrainByBackByDay(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("dayBack") String dayBack, @PathVariable("timeBack") String timeBack)
     {
@@ -130,7 +140,7 @@ public class trainRepresentation{
 
     @PostMapping
     @Transactional
-    public ResponseEntity<?> saveTrain(@RequestBody @Valid trainInput train){
+    public ResponseEntity<?> saveTrain(@RequestBody @Valid TrainInput train){
         Train trainToSave = new Train(
                 UUID.randomUUID().toString(),
                 train.getName(),
@@ -143,7 +153,7 @@ public class trainRepresentation{
         );
 
         Train trainSaved = tr.save(trainToSave);
-        URI location = linkTo(trainRepresentation.class).slash(trainSaved.getId()).toUri();
+        URI location = linkTo(TrainRepresentation.class).slash(trainSaved.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
     //aller -> aller simple

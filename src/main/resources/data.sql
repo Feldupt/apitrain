@@ -6,8 +6,11 @@ INSERT INTO Train (id ,name, start_city, number_of_place_first_class, number_of_
 
 INSERT INTO Place (id, train_id, is_window) values
     ('1','1', TRUE),
-    ('2', '2', TRUE),
-    ('3','3', FALSE);
+    ('2','1', TRUE),
+    ('3','1', FALSE),
+    ('4','1', TRUE),
+    ('5', '2', TRUE),
+    ('6','3', FALSE);
 /*
 INSERT INTO City (id, name, train_id) values
     ('1','Nancy', '2'),

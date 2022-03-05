@@ -20,7 +20,7 @@ public class Place {
     private String id;
     @ManyToOne
     @JoinColumn(name="train_id")
-    private Train trainId;
+    private Train train;
     private boolean isWindow;
 
 
