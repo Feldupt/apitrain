@@ -1,7 +1,7 @@
-INSERT INTO Train (id ,name, number_of_place_first_class, number_of_place_second_class, is_bar) values
-   ('1','fast',50, 120, TRUE),
-   ('2','oui-oui',72, 180, FALSE),
-   ('3','Bjr',34, 156, TRUE);
+INSERT INTO Train (id ,name, start_city, number_of_place_first_class, number_of_place_second_class, is_bar, date) values
+   ('1','fast', 'Nancy', 50, 120, TRUE, '2022-02-23T10:00:00'),
+   ('2','oui-oui','Nancy',72, 180, FALSE, '2022-03-01T11:00:00'),
+   ('3','Bjr','Marseille', 34, 156, TRUE, '2022-03-02T12:00:00');
 
 
 INSERT INTO Place (id, train_id, is_window) values
