@@ -69,13 +69,6 @@ public class trainRepresentation{
         //yyyy-MM-dd
         Set<String> journey = new HashSet<>();
         journey.add(city2);
-        /*
-        for (int i = date2.getHour() + 1; i <= 23; i++) {
-            LocalDateTime date3 = LocalDate.now().atTime(Integer.parseInt(String.valueOf(i)), 0);
-            Optional<Train> trainList = tr.findByStartCityAndJourneyInAndDate(city1, journey, date3);
-            totalListTrain.add(trainList);
-        }
-         */
 
         List<Train> list = tr.findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(city1, journey, newDate);
         ArrayList<EntityModel<Train>> taList = new ArrayList<>();
@@ -83,16 +76,6 @@ public class trainRepresentation{
         taList.add(ta.toModel(t));
 }));
         return ResponseEntity.ok(taList);
-                /*
-        return Optional.ofNullable(tr.findByStartCityAndJourneyInAndDateIsGreaterThanEqual(city1, journey, newDate))
-                .filter(Optional::isPresent)
-                .map(i -> {
-                    ResponseEntity.ok(ta.toModel(i.get()));
-                } )
-                .orElse(ResponseEntity.notFound().build());
-
-
-                 */
 
     }
 
@@ -111,30 +94,37 @@ public class trainRepresentation{
     }
 
     @GetMapping(value="/{city1}/{city2}/aller-retour/{day}/{time}/{dayBack}/{timeBack}")
-    public ResponseEntity<?> getTrainByReturnByDay(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String dayGo, @PathVariable("time") String timeGo, @PathVariable("dayBack") String dayBack, @PathVariable("timeBack") String timeBack)
+    public ResponseEntity<List<?>> getTrainByBackByDay(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("dayBack") String dayBack, @PathVariable("timeBack") String timeBack)
     {
-        String[] tmpDate = dayGo.split("-");
+        String[] tmpDate = day.split("-");
         LocalDate date2 = LocalDate.from(LocalDate.of(Integer.parseInt(tmpDate[2]), Integer.parseInt(tmpDate[1]), Integer.parseInt(tmpDate[0])));
-        LocalTime tst = LocalTime.parse(timeGo+":00:00");
-        String[] tmpDateBack = dayBack.split("-");
-        LocalDate date2Back = LocalDate.from(LocalDate.of(Integer.parseInt(tmpDateBack[2]), Integer.parseInt(tmpDateBack[1]), Integer.parseInt(tmpDateBack[0])));
-        LocalTime tstBack = LocalTime.parse(timeBack+":00:00");
-        LocalDateTime newDate = LocalDateTime.of(date2Back, tstBack);
+        LocalTime tst = LocalTime.parse(time+":00:00");
+        LocalDateTime newDate = LocalDateTime.of(date2, tst);
         System.out.println(newDate);
         //yyyy-MM-dd
         Set<String> journey = new HashSet<>();
-        journey.add(city1);
+        journey.add(city2);
 
-/*
-        return Optional.ofNullable(tr.findByStartCityAndJourneyInAndDateIsGreaterThanEqual(city1, journey, newDate))
-                .filter(Optional::isPresent)
-                .map(i -> ResponseEntity.ok(ta.toModel(i.get())))
-                .orElse(ResponseEntity.notFound().build());
+        List<Train> list = tr.findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(city1, journey, newDate);
+        ArrayList<EntityModel<Train>> taList = new ArrayList<>();
+        list.forEach((t->{
+            taList.add(ta.toModel(t));
+        }));
+        String[] tmpDateBack = day.split("-");
+        LocalDate date2Back = LocalDate.from(LocalDate.of(Integer.parseInt(tmpDateBack[2]), Integer.parseInt(tmpDateBack[1]), Integer.parseInt(tmpDateBack[0])));
+        LocalTime tstBack = LocalTime.parse(time+":00:00");
+        LocalDateTime newDateBack = LocalDateTime.of(date2Back, tstBack);
+        System.out.println(newDateBack);
+        //yyyy-MM-dd
+        Set<String> journeyBack = new HashSet<>();
+        journeyBack.add(city1);
 
+        list = tr.findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(city2, journeyBack, newDateBack);
+        list.forEach((t->{
+            taList.add(ta.toModel(t));
+        }));
+        return ResponseEntity.ok(taList);
 
-
- */
-        return ResponseEntity.ok().build();
     }
 
 
