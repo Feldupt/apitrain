@@ -17,6 +17,7 @@ public class PlaceAssembler implements RepresentationModelAssembler<Place, Entit
     @Override
     public EntityModel<Place> toModel(Place place) {
         String trainId = place.getTrain().getId();
+
       return EntityModel.of(place,
                 linkTo(methodOn(PlaceRepresentation.class)
                         .getAllPlaceByTrain(trainId)).withRel("places"),

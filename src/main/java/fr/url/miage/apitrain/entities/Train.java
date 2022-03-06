@@ -25,10 +25,16 @@ public class Train {
     @ElementCollection
     private Set<String> journey;
     private String startCity;
+    @OneToMany
+    private Set<Place> firstClassPlace;
+    @OneToMany
+    private Set<Place> secondClassPlace;
     private int numberOfPlaceFirstClass;
     private int numberOfPlaceSecondClass;
     private boolean isBar;
     private LocalDateTime date;
 
-
+    public Train(String id) {
+        this.id = id;
+    }
 }

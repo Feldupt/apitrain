@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface PlaceResource extends JpaRepository<Place, String> {
 
-    Iterable<Place> findAllByTrainId(String trainId);
+   Iterable<Place> findAllByTrainId(String trainId);
 
+   Iterable<Place> findAllByTrainIdAndIsWindow(String trainId, boolean window);
 
 }

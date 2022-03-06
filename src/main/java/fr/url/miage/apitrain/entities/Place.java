@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -17,11 +16,12 @@ import javax.persistence.ManyToOne;
 public class Place {
 
     @Id
-    private String id;
-    @ManyToOne
-    @JoinColumn(name="train_id")
-    private Train train;
+    private String idPlace;
     private boolean isWindow;
+    private boolean occupied;
+    @ManyToOne
+    private Train train;
+
 
 
 }

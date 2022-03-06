@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.ElementCollection;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -36,4 +37,6 @@ public class TrainInput {
     private String startCity;
     @NotNull
     private LocalDateTime date;
+    private Set<Place> firstClassPlace;
+    private Set<Place> secondClassPlace;
 }

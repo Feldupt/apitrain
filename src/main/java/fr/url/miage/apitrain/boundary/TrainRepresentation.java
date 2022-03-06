@@ -1,6 +1,7 @@
 package fr.url.miage.apitrain.boundary;
 
 import fr.url.miage.apitrain.control.TrainAssembler;
+import fr.url.miage.apitrain.entities.Place;
 import fr.url.miage.apitrain.entities.Train;
 import fr.url.miage.apitrain.entities.TrainInput;
 import org.springframework.hateoas.EntityModel;
@@ -24,11 +25,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequestMapping(value = "/train", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TrainRepresentation {
 
+    private final PlaceResource pr;
     private final TrainResource tr;
     private final TrainAssembler ta;
 
     // grâce au constructeur, Spring injecte une instance de ir
-    public TrainRepresentation(TrainResource tr, TrainAssembler ta) {
+    public TrainRepresentation(PlaceResource pr, TrainResource tr, TrainAssembler ta) {
+        this.pr = pr;
         this.tr = tr;
         this.ta = ta;
     }
@@ -52,10 +55,13 @@ public class TrainRepresentation {
     {
         Set<String> journey = new HashSet<>();
         journey.add(city2);
-        return Optional.ofNullable(tr.findByStartCityAndJourneyIn(city1, journey))
-                .filter(Optional::isPresent)
-                .map(i -> ResponseEntity.ok(ta.toModel(i.get())))
-                .orElse(ResponseEntity.notFound().build());
+                List<Train> list = tr.findByStartCityAndJourneyIn(city1, journey);
+                ArrayList<EntityModel<Train>> taList = new ArrayList<>();
+                list.forEach((t->{
+                            taList.add(ta.toModelGetOneTrainByCity(t, city2));
+    }));
+        return ResponseEntity.ok(taList);
+
     }
 
     //Aller simple
@@ -81,7 +87,7 @@ public class TrainRepresentation {
     }
     //Aller simple + position
     @GetMapping(value="/{city1}/{city2}/aller/{day}/{time}/{position}")
-    public ResponseEntity<List<?>> getTrainBySimpleByDay(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("position") String position)
+    public ResponseEntity<List<?>> getTrainBySimpleByDayByPosition(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("position") String position)
     {
         String[] tmpDate = day.split("-");
         LocalDate date2 = LocalDate.from(LocalDate.of(Integer.parseInt(tmpDate[2]), Integer.parseInt(tmpDate[1]), Integer.parseInt(tmpDate[0])));
@@ -146,6 +152,8 @@ public class TrainRepresentation {
                 train.getName(),
                 train.getJourney(),
                 train.getStartCity(),
+                train.getFirstClassPlace(),
+                train.getSecondClassPlace(),
                 train.getNumberOfPlaceFirstClass(),
                 train.getNumberOfPlaceSecondClass(),
                 train.isBar(),
@@ -153,6 +161,12 @@ public class TrainRepresentation {
         );
 
         Train trainSaved = tr.save(trainToSave);
+        for (int i = 0; i < trainSaved.getNumberOfPlaceFirstClass() ; i++) {
+            pr.save(new Place(UUID.randomUUID().toString(), i % 2 == 0,false ,trainSaved));
+        }
+        for (int i = 0; i < trainSaved.getNumberOfPlaceSecondClass() ; i++) {
+            pr.save(new Place(UUID.randomUUID().toString(), i % 2 == 0,false ,trainSaved));
+        }
         URI location = linkTo(TrainRepresentation.class).slash(trainSaved.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
