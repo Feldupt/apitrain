@@ -1,12 +1,16 @@
 package fr.url.miage.apitrain.control;
 
 import fr.url.miage.apitrain.boundary.PlaceRepresentation;
+import fr.url.miage.apitrain.boundary.ReservationRepresentation;
 import fr.url.miage.apitrain.boundary.TrainRepresentation;
 import fr.url.miage.apitrain.entities.Place;
+import fr.url.miage.apitrain.entities.Train;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+
+import java.time.format.DateTimeFormatter;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -20,9 +24,23 @@ public class PlaceAssembler implements RepresentationModelAssembler<Place, Entit
 
       return EntityModel.of(place,
                 linkTo(methodOn(PlaceRepresentation.class)
-                        .getAllPlaceByTrain(trainId)).withRel("places"),
+                        .getAllPlaceByTrain(trainId)).withRel("collection"),
                 linkTo(methodOn(TrainRepresentation.class)
                         .getOneTrainById(trainId)).withRel("train"));
+
+    }
+
+    public EntityModel<Place> toModelPlace(Place place, Train train, String city2, String position) {
+        String trainId = place.getTrain().getId();
+
+        return EntityModel.of(place,
+                linkTo(methodOn(PlaceRepresentation.class)
+                        .getAllPlaceByTrain(trainId)).withRel("collection"),
+                linkTo(methodOn(TrainRepresentation.class)
+                        .getOneTrainById(trainId)).withRel("train"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getOnePlaceByTrainById(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), position, place.getIdPlace())).withRel("choisir"));
+
     }
 
     @Override

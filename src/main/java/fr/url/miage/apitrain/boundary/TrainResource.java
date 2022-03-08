@@ -12,4 +12,5 @@ public interface TrainResource extends JpaRepository<Train, String> {
     List<Train> findByStartCityAndJourneyIn(String startCity, Set<String> journey);
 
     List<Train> findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(String city1, Set<String> journey, LocalDateTime date);
+
 }

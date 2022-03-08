@@ -2,11 +2,21 @@ package fr.url.miage.apitrain.boundary;
 
 import fr.url.miage.apitrain.control.PlaceAssembler;
 import fr.url.miage.apitrain.entities.Place;
+import fr.url.miage.apitrain.entities.Train;
 import org.apache.coyote.Response;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @ResponseBody
@@ -21,6 +31,8 @@ public class PlaceRepresentation {
         this.pa = pa;
     }
 
+
+
     @GetMapping()
     public ResponseEntity<?> getAllPlaceByTrain(@PathVariable("trainId") String trainId) {
         Iterable<Place> allPlace = pr.findAllByTrainId(trainId);
@@ -32,9 +44,5 @@ public class PlaceRepresentation {
         Iterable<Place> allPlace = pr.findAllByTrainIdAndIsWindow(trainId, position);
         return ResponseEntity.ok(pa.toCollectionModel(allPlace));
     }
-
-
-
-
 
 }

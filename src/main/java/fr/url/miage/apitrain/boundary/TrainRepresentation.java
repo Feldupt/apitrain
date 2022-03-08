@@ -80,33 +80,11 @@ public class TrainRepresentation {
         List<Train> list = tr.findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(city1, journey, newDate);
         ArrayList<EntityModel<Train>> taList = new ArrayList<>();
         list.forEach((t->{
-        taList.add(ta.toModel(t));
+        taList.add(ta.toModelGetOneTrainByCity(t, city2));
 }));
         return ResponseEntity.ok(taList);
 
     }
-    //Aller simple + position
-    @GetMapping(value="/{city1}/{city2}/aller/{day}/{time}/{position}")
-    public ResponseEntity<List<?>> getTrainBySimpleByDayByPosition(@PathVariable("city1") String city1, @PathVariable("city2") String city2,@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("position") String position)
-    {
-        String[] tmpDate = day.split("-");
-        LocalDate date2 = LocalDate.from(LocalDate.of(Integer.parseInt(tmpDate[2]), Integer.parseInt(tmpDate[1]), Integer.parseInt(tmpDate[0])));
-        LocalTime tst = LocalTime.parse(time+":00:00");
-        LocalDateTime newDate = LocalDateTime.of(date2, tst);
-        System.out.println(newDate);
-        //yyyy-MM-dd
-        Set<String> journey = new HashSet<>();
-        journey.add(city2);
-
-        List<Train> list = tr.findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(city1, journey, newDate);
-        ArrayList<EntityModel<Train>> taList = new ArrayList<>();
-        list.forEach((t->{
-            taList.add(ta.toModel(t));
-        }));
-        return ResponseEntity.ok(taList);
-
-    }
-
 
     //Aller retour
     @GetMapping(value="/{city1}/{city2}/aller-retour/{day}/{time}/{dayBack}/{timeBack}")

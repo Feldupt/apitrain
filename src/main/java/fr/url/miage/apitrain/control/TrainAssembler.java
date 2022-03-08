@@ -1,6 +1,7 @@
 package fr.url.miage.apitrain.control;
 
 import fr.url.miage.apitrain.boundary.PlaceRepresentation;
+import fr.url.miage.apitrain.boundary.ReservationRepresentation;
 import fr.url.miage.apitrain.boundary.TrainRepresentation;
 import fr.url.miage.apitrain.entities.Train;
 import org.springframework.hateoas.CollectionModel;
@@ -25,15 +26,10 @@ public class TrainAssembler implements RepresentationModelAssembler<Train,Entity
         return EntityModel.of(train,
                 linkTo(methodOn(TrainRepresentation.class)
                         .getOneTrainById(train.getId())).withRel("self"),
-                linkTo(methodOn(PlaceRepresentation.class)
-                        .getAllPlaceByTrain(trainId)).withRel("places"),
                 linkTo(methodOn(TrainRepresentation.class)
                         .getAllTrain()).withRel("collection"),
-                linkTo(methodOn(TrainRepresentation.class)
-                        .getTrainBySimpleByDay(train.getStartCity(), train.getJourney().stream().toList().get(0), train.getDate().toString(), train.getDate().toString())).withRel("aller"),
-                linkTo(methodOn(TrainRepresentation.class)
-                        .getAllTrain()).withRel("aller-retour"));
-
+                linkTo(methodOn(PlaceRepresentation.class)
+                        .getAllPlaceByTrain(trainId)).withRel("places"));
     }
 
 
@@ -42,17 +38,18 @@ public class TrainAssembler implements RepresentationModelAssembler<Train,Entity
         return EntityModel.of(train,
                 linkTo(methodOn(TrainRepresentation.class)
                         .getOneTrainById(train.getId())).withRel("self"),
-                linkTo(methodOn(PlaceRepresentation.class)
-                        .getAllPlaceByTrain(trainId)).withRel("places"),
                 linkTo(methodOn(TrainRepresentation.class)
                         .getAllTrain()).withRel("collection"),
-                linkTo(methodOn(TrainRepresentation.class)
-                        .getTrainBySimpleByDay(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()),DateTimeFormatter.ofPattern("HH").format(train.getDate()))).withRel("aller"),
-                linkTo(methodOn(TrainRepresentation.class)
-                        .getAllTrain()).withRel("aller-retour"));
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPosition(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "fenetre")).withRel("places_fenetre"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPosition(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "couloir")).withRel("places_couloir"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPosition(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "aleatoire")).withRel("places_aleatoire"));
+               // linkTo(methodOn(TrainRepresentation.class)
+                 //       .getTrainBySimpleByDay(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()),DateTimeFormatter.ofPattern("HH").format(train.getDate()))).withRel("aller"),
 
     }
-
     @Override
     public CollectionModel<EntityModel<Train>> toCollectionModel(Iterable<? extends Train> entities) {
         List<EntityModel<Train>> trainModel = StreamSupport

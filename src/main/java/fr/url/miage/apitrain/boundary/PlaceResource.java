@@ -9,8 +9,10 @@ import java.util.List;
 
 public interface PlaceResource extends JpaRepository<Place, String> {
 
-   Iterable<Place> findAllByTrainId(String trainId);
+   List<Place> findAllByTrainId(String trainId);
 
    Iterable<Place> findAllByTrainIdAndIsWindow(String trainId, boolean window);
+
+   Iterable<Place> findPlaceByIdPlaceAndTrainId(String placeId, String trainId);
 
 }
