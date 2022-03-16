@@ -39,4 +39,5 @@ public class TrainInput {
     private LocalDateTime date;
     private Set<Place> firstClassPlace;
     private Set<Place> secondClassPlace;
+
 }

@@ -13,6 +13,6 @@ public interface PlaceResource extends JpaRepository<Place, String> {
 
    Iterable<Place> findAllByTrainIdAndIsWindow(String trainId, boolean window);
 
-   Iterable<Place> findPlaceByIdPlaceAndTrainId(String placeId, String trainId);
+   Place findPlaceByIdPlaceAndTrainId(String placeId, String trainId);
 
 }

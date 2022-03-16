@@ -1,6 +1,5 @@
 package fr.url.miage.apitrain.entities;
 
-
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -21,7 +20,7 @@ public class Place {
     private boolean occupied;
     @ManyToOne
     private Train train;
-
+    private float price;
 
 
 }

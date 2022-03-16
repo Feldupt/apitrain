@@ -140,10 +140,10 @@ public class TrainRepresentation {
 
         Train trainSaved = tr.save(trainToSave);
         for (int i = 0; i < trainSaved.getNumberOfPlaceFirstClass() ; i++) {
-            pr.save(new Place(UUID.randomUUID().toString(), i % 2 == 0,false ,trainSaved));
+            pr.save(new Place(UUID.randomUUID().toString(), i % 2 == 0,false ,trainSaved, 110+new Random().nextInt(20)));
         }
         for (int i = 0; i < trainSaved.getNumberOfPlaceSecondClass() ; i++) {
-            pr.save(new Place(UUID.randomUUID().toString(), i % 2 == 0,false ,trainSaved));
+            pr.save(new Place(UUID.randomUUID().toString(), i % 2 == 0,false ,trainSaved, 10+new Random().nextInt(20)));
         }
         URI location = linkTo(TrainRepresentation.class).slash(trainSaved.getId()).toUri();
         return ResponseEntity.created(location).build();

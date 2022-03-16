@@ -34,6 +34,7 @@ public class Train {
     private boolean isBar;
     private LocalDateTime date;
 
+
     public Train(String id) {
         this.id = id;
     }

@@ -39,8 +39,8 @@ public class PlaceRepresentation {
         return ResponseEntity.ok(pa.toCollectionModel(allPlace));
     }
 
-    @GetMapping(value="/position/{position}")
-    public ResponseEntity<?> findAllByTrainIdAndWindow(@PathVariable("trainId") String trainId, @PathVariable("position") boolean position) {
+    @GetMapping(value="/train/{trainIdSecond}/position/{position}")
+    public ResponseEntity<?> findAllByTrainIdAndWindow(@PathVariable("trainIdSecond") String trainId, @PathVariable("position") boolean position) {
         Iterable<Place> allPlace = pr.findAllByTrainIdAndIsWindow(trainId, position);
         return ResponseEntity.ok(pa.toCollectionModel(allPlace));
     }
