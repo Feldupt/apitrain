@@ -46,10 +46,41 @@ public class TrainAssembler implements RepresentationModelAssembler<Train,Entity
                         .getTrainBySimpleByDayByPosition(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "couloir")).withRel("places_couloir"),
                 linkTo(methodOn(ReservationRepresentation.class)
                         .getTrainBySimpleByDayByPosition(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "aleatoire")).withRel("places_aleatoire"));
-               // linkTo(methodOn(TrainRepresentation.class)
-                 //       .getTrainBySimpleByDay(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()),DateTimeFormatter.ofPattern("HH").format(train.getDate()))).withRel("aller"),
 
     }
+
+    public EntityModel<Train> toModelGetOneTrainByCityBack(Train train, String city2, String dayBack, String timeBack) {
+        String trainId = train.getId();
+        return EntityModel.of(train,
+                linkTo(methodOn(TrainRepresentation.class)
+                        .getOneTrainById(train.getId())).withRel("self"),
+                linkTo(methodOn(TrainRepresentation.class)
+                        .getAllTrain()).withRel("collection"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPositionBack(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "fenetre", dayBack, timeBack)).withRel("places_fenetre"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPositionBack(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "couloir", dayBack, timeBack)).withRel("places_couloir"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPositionBack(train.getStartCity(), city2, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "aleatoire", dayBack, timeBack)).withRel("places_aleatoire"));
+
+    }
+
+    public EntityModel<Train> toModelGetOneTrainByCityBackBack(Train train, String city2, String placeId) {
+        String trainId = train.getId();
+        return EntityModel.of(train,
+                linkTo(methodOn(TrainRepresentation.class)
+                        .getOneTrainById(train.getId())).withRel("self"),
+                linkTo(methodOn(TrainRepresentation.class)
+                        .getAllTrain()).withRel("collection"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPositionBackBack(city2, train.getStartCity(), DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "fenetre", placeId)).withRel("places_fenetre"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPositionBackBack(city2, train.getStartCity(), DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "couloir", placeId)).withRel("places_couloir"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getTrainBySimpleByDayByPositionBackBack(city2, train.getStartCity(), DateTimeFormatter.ofPattern("dd-MM-yyyy").format(train.getDate()), DateTimeFormatter.ofPattern("HH").format(train.getDate()), train.getId(), "aleatoire", placeId)).withRel("places_aleatoire"));
+
+    }
+
     @Override
     public CollectionModel<EntityModel<Train>> toCollectionModel(Iterable<? extends Train> entities) {
         List<EntityModel<Train>> trainModel = StreamSupport

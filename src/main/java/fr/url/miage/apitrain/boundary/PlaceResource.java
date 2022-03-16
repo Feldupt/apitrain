@@ -15,4 +15,6 @@ public interface PlaceResource extends JpaRepository<Place, String> {
 
    Place findPlaceByIdPlaceAndTrainId(String placeId, String trainId);
 
+   Place findPlaceByIdPlace(String placeId);
+
 }

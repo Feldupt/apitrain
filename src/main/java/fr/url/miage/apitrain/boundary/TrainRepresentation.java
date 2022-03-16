@@ -102,20 +102,7 @@ public class TrainRepresentation {
         List<Train> list = tr.findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(city1, journey, newDate);
         ArrayList<EntityModel<Train>> taList = new ArrayList<>();
         list.forEach((t->{
-            taList.add(ta.toModel(t));
-        }));
-        String[] tmpDateBack = day.split("-");
-        LocalDate date2Back = LocalDate.from(LocalDate.of(Integer.parseInt(tmpDateBack[2]), Integer.parseInt(tmpDateBack[1]), Integer.parseInt(tmpDateBack[0])));
-        LocalTime tstBack = LocalTime.parse(time+":00:00");
-        LocalDateTime newDateBack = LocalDateTime.of(date2Back, tstBack);
-        System.out.println(newDateBack);
-        //yyyy-MM-dd
-        Set<String> journeyBack = new HashSet<>();
-        journeyBack.add(city1);
-
-        list = tr.findAllByStartCityAndJourneyInAndDateIsGreaterThanEqual(city2, journeyBack, newDateBack);
-        list.forEach((t->{
-            taList.add(ta.toModel(t));
+            taList.add(ta.toModelGetOneTrainByCityBack(t, city2, dayBack, timeBack));
         }));
         return ResponseEntity.ok(taList);
 

@@ -45,6 +45,22 @@ public class PaiementRepresentation {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(value="/{placeIdAller}/{placeIdRetour}")
+    public ResponseEntity<?> paymentSuccessForPlace(@PathVariable("placeIdAller") String placeIdAller,@PathVariable("placeIdRetour") String placeIdRetour)
+    {
+        Place placeAller = pr.getById(placeIdAller);
+        Place placeRetour = pr.getById(placeIdRetour);
+
+        if(placeAller.isOccupied() || placeRetour.isOccupied()){
+            return ResponseEntity.badRequest().build();
+        }
+        placeAller.setOccupied(true);
+        pr.save(placeAller);
+        placeRetour.setOccupied(true);
+        pr.save(placeRetour);
+
+        return ResponseEntity.ok().build();
+    }
 
 
 }

@@ -30,6 +30,32 @@ public class PlaceAssembler implements RepresentationModelAssembler<Place, Entit
 
     }
 
+    public EntityModel<Place> toModelPlaceBack(Place place, Train train, String city2, String position, String dayBack, String timeBack) {
+        String trainId = place.getTrain().getId();
+
+        return EntityModel.of(place,
+                linkTo(methodOn(PlaceRepresentation.class)
+                        .getAllPlaceByTrain(trainId)).withRel("collection"),
+                linkTo(methodOn(TrainRepresentation.class)
+                        .getOneTrainById(trainId)).withRel("train"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getOnePlaceByTrainById(train.getStartCity(), city2, place.getIdPlace(), dayBack, timeBack)).withRel("choisir-retour"));
+
+    }
+
+    public EntityModel<Place> toModelPlaceBackBack(Place place, Train train, String city2, String position, String dayBack, String timeBack, String placeId) {
+        String trainId = place.getTrain().getId();
+
+        return EntityModel.of(place,
+                linkTo(methodOn(PlaceRepresentation.class)
+                        .getAllPlaceByTrain(trainId)).withRel("collection"),
+                linkTo(methodOn(TrainRepresentation.class)
+                        .getOneTrainById(trainId)).withRel("train"),
+                linkTo(methodOn(ReservationRepresentation.class)
+                        .getOnePlaceByTrainByIdBackBack(train.getStartCity(), city2, placeId, place.getIdPlace())).withRel("choisir"));
+
+    }
+
     public EntityModel<Place> toModelPlace(Place place, Train train, String city2, String position) {
         String trainId = place.getTrain().getId();
 
