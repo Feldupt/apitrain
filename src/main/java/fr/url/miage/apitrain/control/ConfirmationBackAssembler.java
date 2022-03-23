@@ -2,7 +2,6 @@ package fr.url.miage.apitrain.control;
 
 import fr.url.miage.apitrain.boundary.PaiementRepresentation;
 import fr.url.miage.apitrain.boundary.TrainRepresentation;
-import fr.url.miage.apitrain.entities.Confirmation;
 import fr.url.miage.apitrain.entities.ConfirmationBack;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -23,7 +22,7 @@ public class ConfirmationBackAssembler implements RepresentationModelAssembler<C
                 linkTo(methodOn(TrainRepresentation.class)
                         .getOneTrainById(confirmation.getTrain().getId())).withRel("train"),
                 linkTo(methodOn(PaiementRepresentation.class)
-                        .paymentSuccessForPlace(confirmation.getPlaceId(), confirmation.getPlaceIdBack())).withRel("paiement"));
+                        .processPayment(confirmation.getPlaceId(), confirmation.getPlaceIdBack())).withRel("paiement"));
 
     }
 
